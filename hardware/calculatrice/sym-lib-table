@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name pic24fj64ga002)(type Legacy)(uri ${KIPRJMOD}/pic24fj64ga002.lib)(options "")(descr ""))
+)

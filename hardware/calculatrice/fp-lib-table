@@ -1,0 +1,5 @@
+(fp_lib_table
+  (lib (name Display)(type KiCad)(uri ${KISYSMOD}/Display.pretty)(options "")(descr ""))
+  (lib (name Capacitors_ThroughHole)(type KiCad)(uri ${KISYSMOD}/Capacitors_ThroughHole.pretty)(options "")(descr ""))
+  (lib (name calculatrice)(type KiCad)(uri ${KIPRJMOD}/calculatrice.pretty)(options "")(descr ""))
+)
