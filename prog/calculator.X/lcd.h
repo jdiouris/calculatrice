@@ -23,12 +23,14 @@ void Lcd_Port(char a)
 	else
 		D7 = 0;
 }
+
+int retard=10; //4
 void Lcd_Cmd(char a)
 {
 	RS = 0;             // => RS = 0
 	Lcd_Port(a);
 	EN  = 1;             // => E = 1
-        __delay_ms(4);
+        __delay_ms(retard);
         EN  = 0;             // => E = 0
 }
 
@@ -174,16 +176,15 @@ void msgCrt(char *m)
 {
     Lcd_Set_Cursor(2,10);
     Lcd_Write_String(m);
-     __delay_ms(100);
+     __delay_ms(200);
     majScreen();
 }
 
-void writeError(int nerror)
+void writeError(char *m)
 {
     Lcd_Set_Cursor(2,1);
-    Lcd_Write_String("Error");
+    Lcd_Write_String(m);
     __delay_ms(1000);
-    majScreen();
 }
 
 

@@ -66,12 +66,13 @@ typedef unsigned char byte;
 #define Func_end 123
 #define Func_sqrt 124
 #define Func_int 125
+#define Func_inv 126
 
 
-#define Func_swap 126
-#define Func_dup 129
+#define Func_swap 127
+#define Func_dup 128
 
-#define Func_pi 130
+#define Func_pi 129
 
 
 // Stack and Programing functions
@@ -93,6 +94,8 @@ typedef unsigned char byte;
 #define ErrorIncorrectArgument 3
 #define ErrorUnknownVar 4
 #define ErrorFuncNotFound 5
+#define ErrorUnknownIdentifier 6
+#define ErrorString 7
 
 
 // Pointers

@@ -4,10 +4,11 @@
 #include <string.h>
 #include "calculator.h"
 #include "datas.h"
+#include "interpreteur.h"
 #include "calculation.h"
 
 
-#define cmp(s1,s2) (strcmp(s1,s2)==0)
+
 
 int isNumber(char * s, double *value)
 {
@@ -45,10 +46,14 @@ int interpretString(char *line)
     }
     else if (line[0]=='\'') 
     {
-     
-        strcpy(buf,line);
-        supDel(buf);
-        stackPushString(buf);
+        int k=strlen(line);
+        if ((k>1)&&(line[k-1]=='\''))
+        {
+            strcpy(buf,line);
+            supDel(buf);
+            stackPushString(buf);
+        }
+        else execError=Error;
     }   
     else if cmp(line,"+") execError=exec(Op_add);
     else if cmp(line,"*") execError=exec(Op_mul);
@@ -64,8 +69,23 @@ int interpretString(char *line)
     else if cmp(line,"RCL") execError=exec(Func_rcl);
     else if cmp(line,"WHO") execError=exec(Func_who);
      else if cmp(line,"PI") execError=exec(Func_pi);
+     else if cmp(line,"INV") execError=exec(Func_inv);
+     else
+     {
+         int pp=findFunc(line);
+         if (pp>=0) execFunc(line);
+         else 
+         {
+           pp=findVar(line);
+           if (pp>=0) getVar(line);
+           else execError=ErrorUnknownIdentifier;
+         }
+     }
+    
     
     stackPrint();
+    //msgCrt(line);
+    
     return execError;
 }
 

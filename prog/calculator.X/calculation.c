@@ -94,6 +94,11 @@ int exec(int func) {
         case Func_who:
             who();
             break;
+        case Func_inv:
+            x1 = stackGetTopDouble();
+            if (execError==0) stackPop();
+            if (execError==0) stackPushDouble(1.0/x1);
+            break;
         case Func_pi:
             stackPushDouble(3.14159265359);
             break;
@@ -125,7 +130,12 @@ int execFunc(char *name)
                     getString(buff,p);
                     pp=findFunc(buff);
                     if (pp>=0) execFunc(buff);
-                    else getValue(p);
+                    else 
+                    {
+                        pp=findVar(buff);
+                        getVar(buff);
+                        // getValue(pp);)
+                    }
                     break;
                 case tInst:
                     if (getInst(p+3)==Func_rtn) end=1;

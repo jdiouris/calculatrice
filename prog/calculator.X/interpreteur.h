@@ -12,6 +12,8 @@ int interpretFunction(int f);
 
 int compile();
 
+#define cmp(s1,s2) (strcmp(s1,s2)==0)
+
 
 
 #endif	/* INTERPRETEUR_H */
