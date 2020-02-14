@@ -224,10 +224,10 @@ int stackPop() {
     if (pStack == STACK0) { pStack = -1; sStack=0; }
     else if (pStack > 0) { pStack -= s; sStack--; }
     else {
-        error = ErrorStackEmpty;
+        execError = ErrorStackEmpty;
     }
     
-    return error;
+    return execError;
 }
 
 int stackGetTopType() {
@@ -377,11 +377,16 @@ int nextpDict() {
 void storeValue() {
     int len = getSize(pStack);
     int i;
+    if (pStack>-1)
+    {
     nextpDict();
     for (i = 0; i < len; i++) {
         mem[pDict + i] = mem[pStack + i];
     }
     stackPop();
+    }
+    else execError = ErrorStackEmpty;
+            
 }
 
 
@@ -549,7 +554,16 @@ int findFuncN(int N, char *s)
     return p;
 }
 
-
+int numberOfFunction()
+{
+    int n=0;
+    int i = 0;
+    while (i < pDict) {
+        if (getType(i) == tFunc) n++;
+        i += getSize(i);
+    }
+    return n;
+}
 void who()
 {
     int i = 0;

@@ -73,13 +73,20 @@ int exec(int func) {
             if (execError == 0) stackPop();
             if (execError == 0) stackPushDouble(x2 / x1);
             break;
+        case Op_pow:
+            x1 = stackGetTopDouble();
+            if (execError == 0) stackPop();
+            if (execError == 0) x2 = stackGetTopDouble();
+            if (execError == 0) stackPop();
+            if (execError == 0) stackPushDouble(pow(x2,x1));
+            break;
         case Op_eq:
             x1 = stackGetTopDouble();
             if (execError == 0) stackPop();
             if (execError == 0) x2 = stackGetTopDouble();
             if (execError == 0) stackPop();
             if (execError == 0) stackPushDouble(x2 == x1);
-            break;
+            break;    
         case Op_neq:
             x1 = stackGetTopDouble();
             if (execError == 0) stackPop();

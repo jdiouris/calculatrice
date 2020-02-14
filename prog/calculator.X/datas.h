@@ -168,6 +168,8 @@ int findFunc(char *s);
 
 int findFuncN(int N, char *s);
 
+int numberOfFunction();
+
 // Print on console
 void stackPrint();
 void dictPrint();

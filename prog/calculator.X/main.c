@@ -497,30 +497,55 @@ void indicator(char *s) {
 
 void menuFunc() {
     char s[10];
-    Lcd_Clear();
-    if (findFuncN(1, s)>-1) menu(1, s);
-    if (findFuncN(2, s)>-1) menu(2, s);
-    if (findFuncN(3, s)>-1) menu(3, s);
     
     int c = 1;
+    int fin=0;
+    int i=0;
+    int imax=numberOfFunction();
+    while (fin==0)
+    {
+        Lcd_Clear();
+    if (findFuncN(1+i, s)>-1) menu(1, s);
+    if (findFuncN(2+i, s)>-1) menu(2, s);
+    if (findFuncN(3+i, s)>-1) menu(3, s);
+    
     while ((c=readKey())==0);
     if (c==4) 
     {
-        findFuncN(1, s);
+        findFuncN(1+i, s);
         Lcd_Clear();
         interpretString(s);
+        messageError();
+        fin=1;
     }
-    if (c==3) 
+        else if (c==3) 
     {
-        findFuncN(2, s);
+        findFuncN(2+i, s);
          Lcd_Clear();
         interpretString(s);
+            messageError();
+            fin=1;
     }
-    if (c==2) 
+        else if (c==2) 
     {
-        findFuncN(3, s);
+        findFuncN(3+i, s);
          Lcd_Clear();
         interpretString(s);
+            messageError();
+            fin=1;
+    }
+        else if (c==1)
+        {
+            if (i<imax-3) i++;
+            else i=0;
+        }
+        else if (c==5)
+        {
+            if (i>0) i--;
+            else i=imax-3;
+        }
+        else fin=1;
+        while (readKey()!=0);        
     }
     dispStack();
 }
@@ -652,6 +677,12 @@ int main(int argc, char** argv) {
                     }
                 }
                 if (cmp(buffer, "USER")) {
+                    if (strlen(line) > 0) {
+                        interpretString(line);
+                        messageError();
+                        strcpy(line, "");
+                        fnew = 1;
+                    }
                     menuFunc();
                 }
             }

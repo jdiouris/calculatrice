@@ -67,6 +67,8 @@ int decInst(char *s) {
     else if cmp(s, "DUP") resu = Func_dup;
     else if cmp(s, "SQ") resu = Func_sq;
     else if cmp(s, "SQRT") resu = Func_sqrt;
+    else if cmp(s, "POW") resu = Op_pow;
+     else if cmp(s, "POW10") resu = Func_pow10;
 
     return resu;
 }
