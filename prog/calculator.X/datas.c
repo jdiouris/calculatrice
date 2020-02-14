@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <xc.h>
 
 
 union {
@@ -12,10 +13,6 @@ union {
 
 // Byte array for the dictionart and stack
 byte mem[DICTSIZE + STACKSIZE];
-// Return stack
-int retStack[RETURNSTACKSIZE];
-
-
 
 
 
@@ -161,11 +158,13 @@ void getFunc(char * s, int p) {
 
 void initStack() {
     pStack = -1;
+    sStack=0;
 }
 
 int nextpStack() {
     if (pStack == -1) pStack = STACK0;
     else pStack += getSize(pStack);
+    sStack++;
     return pStack;
 }
 
@@ -222,11 +221,12 @@ void stackGetTopString(char * s) {
 int stackPop() {
     int error = 0;
     int s = getSize(pStack - 2);
-    if (pStack == STACK0) pStack = -1;
-    else if (pStack > 0) pStack -= s;
+    if (pStack == STACK0) { pStack = -1; sStack=0; }
+    else if (pStack > 0) { pStack -= s; sStack--; }
     else {
         error = ErrorStackEmpty;
     }
+    
     return error;
 }
 
@@ -254,7 +254,7 @@ void disp(int p, char *s)
                 break;
                 case tString:
                     getString(buffer, p);
-                    sprintf(s,"\'%s\'",buffer);
+                    sprintf(s,"%s",buffer);
                     break;
                 case tVar:
                     getString(buffer, p);
@@ -287,7 +287,7 @@ int stackDisp(char *s, int ind) {
             switch (getType(p)) {
                 case tDouble:
                     f = getDouble(p + 3);
-                    sprintf(s, "%f", f);
+                    sprintf(s, "%g", f);
                     break;
                 case tInt:
                     i = getInt(p + 3);
@@ -336,14 +336,30 @@ void dictPrint()
 }
 
     
-    
+ void setVarLevel(int p, int v)
+ {
+     mem[p+3]=v;
+ }
+ 
+ int getVarLevel(int p)
+ {
+     return mem[p+3];
+ }
+ 
+ void getVarName(char * s, int p) {
+    int len = getSize(p) - 6; // length
+    int i;
+    for (i = 0; i < len; i++) s[i] = mem[p + 4 + i];
+    s[len] = 0;
+}
 
 // Variables
 void storeVar(int p, char *s) {
-    int sz = 5 + strlen(s);
+    int sz = 6 + strlen(s);
     setSize(p,sz);
     setType(p,tVar);
-    setString(s, p + 3);
+    setVarLevel(p,funcLevel);
+    setString(s, p + 4);
     setSize(p+sz-2,sz);
 }
 
@@ -388,23 +404,19 @@ int findVar(char *s)
     int i = 0;
     int p = -1;
     char svar[20];
-    while (i < pDict) {
+    while ((i < pDict)&&(p==-1)) {
         if (getType(i) == tVar) {
-            getString(svar, i);
-            if (strcmp(s, svar) == 0) p = i;
+            getVarName(svar, i);
+            if ((strcmp(s, svar) == 0)&&getVarLevel(i)==funcLevel) p = i;
         }
         i += getSize(i);
     }
     return p;
 }
 
-void supVar(char *s)
+// Sup var at position p
+void supVarp(int p)
 {
-    int p=findVar(s);
-    
-    if (p>=0)
-    {
-        printf("Sup %s %d\n",s,p);
         int pp;
         // supprime l'ente^te avecle nom
         int sz=getSize(p);
@@ -426,6 +438,24 @@ void supVar(char *s)
             mem[pp-sz]=mem[pp];
         }
         pDict-=sz;
+    
+}
+
+// Sup var with name s
+void supVar(char *s)
+{
+    int p=findVar(s);
+    if (p>=0) supVarp(p);
+   
+}
+
+// sup vars with funcLevel
+void supVarLevel()
+{
+    int i = 0;
+    while (i < pDict) {
+        if ((getType(i) == tVar)&& (getVarLevel(i)==funcLevel)) supVarp(i);
+        else i += getSize(i);
     }
 }
 // set variable
@@ -434,12 +464,16 @@ void supVar(char *s)
 
 void setVar() {
     char name[20];
-    stackGetTopString(name);
-    stackPop();
-    supVar(name);
-    int p = nextpDict();
-    storeVar(p, name);
-    storeValue();
+    if (stackGetTopType()==tString)
+    {
+        stackGetTopString(name);
+        stackPop();
+        supVar(name);
+        int p = nextpDict();
+        storeVar(p, name);
+        storeValue();
+    }
+    else execError=ErrorIncorrectArgument;
 }
 
 
@@ -462,8 +496,11 @@ void getVar(char *s) {
 // Functions *******************************************************************
 
 void storeFunc(int p, char *s) {
-    storeVar(p,s);
+   int sz = 5 + strlen(s);
+    setSize(p,sz);
     setType(p,tFunc);
+    setString(s, p + 3);
+    setSize(p+sz-2,sz);
 }
 // set Func 
 // 
@@ -483,7 +520,7 @@ int findFunc(char *s)
     int i = 0;
     int p = -1;
     char svar[20];
-    while (i < pDict) {
+    while ((i < pDict)&&(p==-1)) {
         if (getType(i) == tFunc) {
             getString(svar, i);
             if (strcmp(s, svar) == 0) p = i;
@@ -493,21 +530,48 @@ int findFunc(char *s)
     return p;
 }
 
+int findFuncN(int N, char *s)
+{
+    int i = 0;
+    int p = -1;
+    int n=0;
+    while ((i < pDict)&&(p==-1)) {
+        if (getType(i) == tFunc) {
+            n++;
+            if (n==N)
+            {
+                getString(s, i);
+                p = i;
+            }
+        }
+        i += getSize(i);
+    }
+    return p;
+}
+
+
 void who()
 {
     int i = 0;
     char svar[20];
     while (i < pDict) {
         if (getType(i) == tVar) {
-            getString(svar, i);
-            msgCrt(svar);
+            clearLcd();
+            getVarName(svar, i);
+            strcat(svar," (var)");
+            msg(svar);
             printf("who:var %s\n",svar);
+            waitKey();
         }
         if (getType(i) == tFunc) {
             getString(svar, i);
-            msgCrt(svar);
+            clearLcd();
+            strcat(svar," (func)");
+            msg(svar);
             printf("who:Func %s\n",svar);
+            waitKey();
         }
         i += getSize(i);
+     
     }
 }

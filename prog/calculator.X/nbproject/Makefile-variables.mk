@@ -4,10 +4,17 @@
 # NOCDDL
 #
 CND_BASEDIR=`pwd`
-# default configuration
-CND_ARTIFACT_DIR_default=dist/default/production
-CND_ARTIFACT_NAME_default=calculator.X.production.hex
-CND_ARTIFACT_PATH_default=dist/default/production/calculator.X.production.hex
-CND_PACKAGE_DIR_default=${CND_DISTDIR}/default/package
-CND_PACKAGE_NAME_default=calculator.x.tar
-CND_PACKAGE_PATH_default=${CND_DISTDIR}/default/package/calculator.x.tar
+# real configuration
+CND_ARTIFACT_DIR_real=dist/real/production
+CND_ARTIFACT_NAME_real=calculator.X.production.hex
+CND_ARTIFACT_PATH_real=dist/real/production/calculator.X.production.hex
+CND_PACKAGE_DIR_real=${CND_DISTDIR}/real/package
+CND_PACKAGE_NAME_real=calculator.x.tar
+CND_PACKAGE_PATH_real=${CND_DISTDIR}/real/package/calculator.x.tar
+# simulation configuration
+CND_ARTIFACT_DIR_simulation=dist/simulation/production
+CND_ARTIFACT_NAME_simulation=calculator.X.production.hex
+CND_ARTIFACT_PATH_simulation=dist/simulation/production/calculator.X.production.hex
+CND_PACKAGE_DIR_simulation=${CND_DISTDIR}/simulation/package
+CND_PACKAGE_NAME_simulation=calculator.x.tar
+CND_PACKAGE_PATH_simulation=${CND_DISTDIR}/simulation/package/calculator.x.tar

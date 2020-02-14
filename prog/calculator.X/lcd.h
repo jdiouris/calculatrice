@@ -119,73 +119,80 @@ void Lcd_Shift_Left()
 // Functions haut niveau
 
 
+char buffer[20];
 char line1[20];
 char line2[20];
-char buffer[20];
 
-void clearScreen()
+
+
+void printLcd()
 {
-    Lcd_Clear();
+    printf("----------------\n");
+    printf("%s\n",line1);
+    printf("%s\n",line2);
+    printf("----------------\n)");
+}
+
+void clearLcd()
+{
+    Lcd_Clear();  
     strcpy(line1,"");
-    strcpy(line2,"");   
+    strcpy(line2,"");
+    printLcd();
 }
 
-void majStackScreen()
+void dispLine1(char *s)
 {
-    Lcd_Clear();
     Lcd_Set_Cursor(1,1);
-    strcpy(buffer,"2:");
-    strcat(buffer,line1);
-    Lcd_Write_String(buffer);
+    Lcd_Write_String(s);
+    strcpy(line1,s);
+    printLcd();
+}
+
+
+void dispLine2(char *s)
+{
     Lcd_Set_Cursor(2,1);
-    strcpy(buffer,"1:");
-    strcat(buffer,line2);
-    Lcd_Write_String(buffer);
+    Lcd_Write_String(s);
+    strcpy(line2,s);
+    printLcd();
 }
 
-void majScreen()
-{
-    Lcd_Clear();
-    Lcd_Set_Cursor(1,1);
-    Lcd_Write_String(line1);
-    Lcd_Set_Cursor(2,1);
-    Lcd_Write_String(line2);
-   
-}
 
-void printString(char *a)
-{
-    strcpy(line1,line2);
-    strcpy(line2,a);
-    
-    majScreen();
-}
-
-void printDouble(double v)
-{
-     strcpy(line1,line2);
-     sprintf(buffer,"%f",v);
-     int i;
-     strcpy(line2,"");
-     for (i=0; i<14-strlen(buffer); i++) strcat(line2," ");
-     strcat(line2,buffer);
-     majStackScreen();
-}
 
 void msgCrt(char *m)
 {
-    Lcd_Set_Cursor(2,10);
+    Lcd_Set_Cursor(2,14);
     Lcd_Write_String(m);
-     __delay_ms(200);
-    majScreen();
+     __delay_ms(1000);
 }
 
-void writeError(char *m)
+void msg(char *m)
 {
     Lcd_Set_Cursor(2,1);
     Lcd_Write_String(m);
+    strcpy(line2,m);
+    printLcd();
+}
+
+void writeError(char *m1, char *m)
+{
+    Lcd_Set_Cursor(1,1);
+    Lcd_Write_String(m1);
+    strcpy(line1,m1);
+     Lcd_Set_Cursor(2,1);
+    Lcd_Write_String(m);
+    strcpy(line2,m);
+    printLcd();
     __delay_ms(1000);
 }
+
+void menu(int n, char *s)
+{
+    Lcd_Set_Cursor(2,2+(n-1)*5);
+    Lcd_Write_String(s);
+}
+
 
 
 

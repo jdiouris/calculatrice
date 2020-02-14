@@ -8,6 +8,9 @@
 #ifndef CALCULATION_H
 #define	CALCULATION_H
 
+extern int funcLevel;
+extern char errorMsg[20];
+
 // Execution
 
 int exec(int func); // exec function defined by its identifier

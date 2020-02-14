@@ -9,6 +9,7 @@
 #define	DATAS_H
 
 typedef unsigned char byte;
+#include <xc.h>
 
 // define type of objects
 
@@ -23,7 +24,7 @@ typedef unsigned char byte;
 
 // define sizes of Dictionary, data stack and return stack
 #define DICTSIZE 1000
-#define RETURNSTACKSIZE 100
+
 #define STACKSIZE 1000
 #define STACK0 DICTSIZE
 #define DICT0 0
@@ -38,6 +39,8 @@ typedef unsigned char byte;
 #define Op_lt 6
 #define Op_gte 7
 #define Op_lte 8
+#define Op_neq 9
+#define Op_pow 10
 
 // Math functions
 #define Func_abs 100
@@ -72,15 +75,21 @@ typedef unsigned char byte;
 #define Func_swap 127
 #define Func_dup 128
 
+
 #define Func_pi 129
+#define Func_drop 130
+#define Func_ln 131
+#define Func_pow10 132
+#define Func_sq 133
+
 
 
 // Stack and Programing functions
 
 #define Func_for 1000
-#define Func_next 1001
+#define Func_step 1001
 #define Func_if 1002
-#define Func_endif 1003
+#define Func_do 1003
 #define Func_else 1004
 #define Func_goto 1005
 #define Func_while 1009
@@ -96,16 +105,20 @@ typedef unsigned char byte;
 #define ErrorFuncNotFound 5
 #define ErrorUnknownIdentifier 6
 #define ErrorString 7
+#define ErrorReturnStackFull 8
+#define ErrorReturnStackEmpty 9
 
 
 // Pointers
 extern int pDict;            // dictionary pointer
-extern int pStack;           // Stack pointer
+extern int pStack;
+extern int sStack;
 extern int pReturnStack;     // Return stack pointer
 
 // Other variable
 extern int execError;        // Execution error
 extern char bufferFunc[1000]; // Editing function buffer
+extern int funcLevel;
 
 extern char buff[20];
 
@@ -115,7 +128,7 @@ int getType(int p);
 // Initialisations
 void initDict();   // Dictionary initialisation
 
-
+void getString(char * s, int p);
 
 
 // Stack
@@ -145,12 +158,15 @@ int stackPushInst(int x);
 void setVar();          // set var defined on the stack (value varname -- )
 void getVar(char *s);   //
 void supVar(char *s);   // sup var given by its name
+int findVar(char *s);
 
 // Func
 
 void setFunc();
 
 int findFunc(char *s);
+
+int findFuncN(int N, char *s);
 
 // Print on console
 void stackPrint();

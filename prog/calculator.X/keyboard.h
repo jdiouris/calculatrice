@@ -174,5 +174,13 @@ int readKey()
     return k;
 }
 
+int waitKey()
+{
+    int k=0;
+    while (k==0) k=readKey();
+    while (readKey()!=0);
+    return k;
+}
+
 #endif	/* KEYBOARD_H */
 
