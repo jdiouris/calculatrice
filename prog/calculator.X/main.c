@@ -495,6 +495,57 @@ void indicator(char *s) {
     Lcd_Write_String(s);
 }
 
+int mot(int n, char *m )
+{
+    int found=0;
+    int i;
+    int im=0;
+    int state=0;
+    int j=0;
+    char c;
+    i=0;
+    while ((i<strlen(bufferFunc))&&(!found)) {
+        c=bufferFunc[i];
+        switch (state) {
+            case 0: if (c>=' ') { 
+                state=1; im++;
+                if (im==n) { m[j++]=c; }
+            }
+                break;
+            case 1:
+                if (c<' ') {
+                    state=0; 
+                    if (im==n) { m[j]=0; found=1; }
+                }
+                else  if (im==n) { m[j++]=c; }
+                break;
+        }
+                
+        
+    }
+    return found;
+}
+
+void editFunction() {
+    int i;
+    char c;
+    int fin = 0;
+    char m[20];
+    int f;
+    decompFunc("FACT");
+    while (!fin) {
+        
+        f=mot(1,m);
+        if (f)  {  Lcd_Set_Cursor(1, 1); Lcd_Write_String(m); }
+        f=mot(2,m);
+        if (f)  {  Lcd_Set_Cursor(2, 1); Lcd_Write_String(m); } 
+        
+        while ((c = readKey()) != 0);
+        while (readKey == 0);
+        if (c==1) fin=1;
+    }
+}
+
 void menuFunc() {
     char s[10];
     
@@ -684,6 +735,10 @@ int main(int argc, char** argv) {
                         fnew = 1;
                     }
                     menuFunc();
+                }
+                if (cmp(buffer,"EDIT")) {
+                    editFunction();
+                     dispStack();
                 }
             }
             if (f == ffunc) {

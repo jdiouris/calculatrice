@@ -1,2 +1,6 @@
-build/real/debug/interpreteur.o: interpreteur.c calculator.h datas.h \
- interpreteur.h calculation.h
+build/real/debug/interpreteur.o:  \
+interpreteur.c  \
+calculator.h  \
+datas.h  \
+ interpreteur.h  \
+calculation.h 

@@ -287,11 +287,11 @@ section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200              0x35fe          0x50fd  (20733)
 .const                      0x37fe               0x424           0x636  (1590)
-.text                       0x3c22              0x2bfc          0x41fa  (16890)
-.dinit                      0x681e               0x21c           0x32a  (810)
-.init.delay32               0x6a3a                0x1c            0x2a  (42)
+.text                       0x3c22              0x2d2e          0x43c5  (17349)
+.dinit                      0x6950               0x21c           0x32a  (810)
+.init.delay32               0x6b6c                0x1c            0x2a  (42)
 
-                 Total "program" memory used (bytes):         0x9c81  (40065) 61%
+                 Total "program" memory used (bytes):         0x9e4c  (40524) 62%
 
 
 "data" Memory  [Origin = 0x800, Length = 0x2000]
@@ -398,11 +398,11 @@ External Symbols in Program Memory (by address):
                   0x0003c8                  ___adddf3
                   0x0004c4                  _cos
                   0x0004c4                  _cosl
-                  0x0004c8                  ___eqdf2
-                  0x0004c8                  ___ltdf2
                   0x0004c8                  ___ledf2
-                  0x0004d2                  ___gedf2
+                  0x0004c8                  ___ltdf2
+                  0x0004c8                  ___eqdf2
                   0x0004d2                  ___gtdf2
+                  0x0004d2                  ___gedf2
                   0x0004dc                  ___divdf3
                   0x000590                  ___nedf2
                   0x00059a                  __dpack
@@ -415,13 +415,13 @@ External Symbols in Program Memory (by address):
                   0x000690                  _logl
                   0x0007c0                  ___muldf3
                   0x0008ac                  ___mulsf3
-                  0x000914                  _pow
                   0x000914                  _powl
-                  0x000b50                  _sinl
+                  0x000914                  _pow
                   0x000b50                  _sin
+                  0x000b50                  _sinl
                   0x000b54                  __sincos
-                  0x000cae                  _sqrtl
                   0x000cae                  _sqrt
+                  0x000cae                  _sqrtl
                   0x000d4e                  ___subdf3
                   0x000d52                  _tan
                   0x000d52                  _tanl
@@ -436,12 +436,12 @@ External Symbols in Program Memory (by address):
                   0x0011ce                  __dPropagateNaN
                   0x0011ea                  __dtype
                   0x00120e                  __dunpack
-                  0x00125c                  _exp
                   0x00125c                  _expl
+                  0x00125c                  _exp
                   0x00138c                  ___fixdfsi
                   0x0013e4                  ___floatsidf
-                  0x0013ea                  _fmodl
                   0x0013ea                  _fmod
+                  0x0013ea                  _fmodl
                   0x0013f2                  __fpack
                   0x00143e                  _frexp
                   0x00143e                  _frexpl
@@ -474,28 +474,28 @@ External Symbols in Program Memory (by address):
                   0x001eae                  __Stoflt
                   0x0020e8                  sprintf_cdfFgGnopsuxX.XXedo:_prout
                   0x0020f6                  __dsprintf_cdnopsuxX
-                  0x0020f6                  __dsprintf_cdfFnopsuxX
                   0x0020f6                  __dsprintf_cdnopuxX
+                  0x0020f6                  __dsprintf_cdfFnopsuxX
                   0x0020f6                  __dsprintf_cdfFgGnopsuxX
                   0x002114                  ___dPrintf_cdfFgGnopsuxX
                   0x002114                  ___dPrintf_s
                   0x002114                  ___dPrintf_cdnopsuxX
-                  0x002114                  ___dPrintf_cdfFnopsuxX
                   0x002114                  ___dPrintf_cdnopuxX
+                  0x002114                  ___dPrintf_cdfFnopsuxX
                   0x002278                  ___dPutfld_cdnopsuxX
-                  0x002278                  ___dPutfld_cdfFnopsuxX
                   0x002278                  ___dPutfld_cdnopuxX
-                  0x002278                  ___dPutfld_s
                   0x002278                  ___dPutfld_cdfFgGnopsuxX
+                  0x002278                  ___dPutfld_s
+                  0x002278                  ___dPutfld_cdfFnopsuxX
                   0x00252c                  __d_Ldtob_cdfFgGnopsuxX
                   0x002792                  __d_Genld_cdfFgGnopsuxX
                   0x0029cc                  __d_Ldtob_cdfFnopsuxX
                   0x002c1c                  __d_Genld_cdfFnopsuxX
                   0x002e24                  printf_cdnopsuxX.XXedo:_prout
-                  0x002e40                  __dprintf_0
                   0x002e40                  __dprintf_s
                   0x002e40                  __dprintf_cdnopuxX
                   0x002e40                  __dprintf_cdnopsuxX
+                  0x002e40                  __dprintf_0
                   0x002e50                  _div
                   0x002e66                  __DNKfflush
                   0x002edc                  _fputs
@@ -520,8 +520,8 @@ External Symbols in Program Memory (by address):
                   0x0037ae                  ___divsi3
                   0x0037cc                  ___udivsi3
                   0x0037ec                  ___umodsi3
-                  0x0037f2                  ___mulp32eds3
                   0x0037f2                  ___mulsi3
+                  0x0037f2                  ___mulp32eds3
                   0x0037f2                  ___mulp32peds3
                   0x003c22                  _Lcd_Port
                   0x003c64                  _Lcd_Cmd
@@ -556,76 +556,78 @@ External Symbols in Program Memory (by address):
                   0x0047de                  _messageError
                   0x004850                  _dispEditLine
                   0x00486a                  _indicator
-                  0x00487c                  _menuFunc
-                  0x00497e                  _main
-                  0x004bac                  _initDict
-                  0x004bb6                  _setSize
-                  0x004bd6                  _getSize
-                  0x004bf2                  _setType
-                  0x004c06                  _getType
-                  0x004c16                  _setDouble
-                  0x004c5a                  _getDouble
-                  0x004c94                  _storeDouble
-                  0x004cce                  _setInt
-                  0x004cf8                  _getInt
-                  0x004d14                  _storeInt
-                  0x004d42                  _setInst
-                  0x004d6c                  _getInst
-                  0x004d88                  _storeInst
-                  0x004db6                  _setString
-                  0x004de8                  _getString
-                  0x004e26                  _storeString
-                  0x004e5a                  _getFunc
-                  0x004e98                  _initStack
-                  0x004ea4                  _nextpStack
-                  0x004ec8                  _stackPushDouble
-                  0x004eea                  _stackGetTopDouble
-                  0x004f12                  _stackPushInt
-                  0x004f28                  _stackPushInst
-                  0x004f3e                  _stackPushString
-                  0x004f54                  _stackGetTopString
-                  0x004f90                  _stackPop
-                  0x004fce                  _stackGetTopType
-                  0x004fde                  _disp
-                  0x005096                  _stackDisp
-                  0x005176                  _stackPrint
-                  0x0051aa                  _dictPrint
-                  0x0051e2                  _setVarLevel
-                  0x0051f8                  _getVarLevel
-                  0x00520a                  _getVarName
-                  0x005248                  _storeVar
-                  0x005284                  _nextpDict
-                  0x0052a0                  _storeValue
-                  0x0052dc                  _getValue
-                  0x00530c                  _findVar
-                  0x005360                  _supVarp
-                  0x0053dc                  _supVar
-                  0x0053f4                  _supVarLevel
-                  0x00542a                  _setVar
-                  0x005454                  _getVar
-                  0x00547c                  _storeFunc
-                  0x0054b0                  _setFunc
-                  0x0054d4                  _findFunc
-                  0x00551e                  _findFuncN
-                  0x005570                  _numberOfFunction
-                  0x00559e                  _who
-                  0x00561c                  _initReturnStack
-                  0x005626                  _pushRetStack
-                  0x005640                  _popRetStack
-                  0x005658                  _exec
-                  0x005cbc                  _execFunc
-                  0x00606c                  _isNumber
-                  0x0060a8                  _supDel
-                  0x0060e4                  _decInst
-                  0x006310                  _interpretString
-                  0x0063ca                  _interpretFunction
-                  0x0063dc                  _compileString
-                  0x006430                  _append
-                  0x006456                  _sep
-                  0x00646c                  _compile
-                  0x0064e2                  _decompile
-                  0x006788                  _decompFunc
-                  0x006a3a                  ___delay32
+                  0x00487c                  _mot
+                  0x00493c                  _editFunction
+                  0x0049a0                  _menuFunc
+                  0x004aa2                  _main
+                  0x004cde                  _initDict
+                  0x004ce8                  _setSize
+                  0x004d08                  _getSize
+                  0x004d24                  _setType
+                  0x004d38                  _getType
+                  0x004d48                  _setDouble
+                  0x004d8c                  _getDouble
+                  0x004dc6                  _storeDouble
+                  0x004e00                  _setInt
+                  0x004e2a                  _getInt
+                  0x004e46                  _storeInt
+                  0x004e74                  _setInst
+                  0x004e9e                  _getInst
+                  0x004eba                  _storeInst
+                  0x004ee8                  _setString
+                  0x004f1a                  _getString
+                  0x004f58                  _storeString
+                  0x004f8c                  _getFunc
+                  0x004fca                  _initStack
+                  0x004fd6                  _nextpStack
+                  0x004ffa                  _stackPushDouble
+                  0x00501c                  _stackGetTopDouble
+                  0x005044                  _stackPushInt
+                  0x00505a                  _stackPushInst
+                  0x005070                  _stackPushString
+                  0x005086                  _stackGetTopString
+                  0x0050c2                  _stackPop
+                  0x005100                  _stackGetTopType
+                  0x005110                  _disp
+                  0x0051c8                  _stackDisp
+                  0x0052a8                  _stackPrint
+                  0x0052dc                  _dictPrint
+                  0x005314                  _setVarLevel
+                  0x00532a                  _getVarLevel
+                  0x00533c                  _getVarName
+                  0x00537a                  _storeVar
+                  0x0053b6                  _nextpDict
+                  0x0053d2                  _storeValue
+                  0x00540e                  _getValue
+                  0x00543e                  _findVar
+                  0x005492                  _supVarp
+                  0x00550e                  _supVar
+                  0x005526                  _supVarLevel
+                  0x00555c                  _setVar
+                  0x005586                  _getVar
+                  0x0055ae                  _storeFunc
+                  0x0055e2                  _setFunc
+                  0x005606                  _findFunc
+                  0x005650                  _findFuncN
+                  0x0056a2                  _numberOfFunction
+                  0x0056d0                  _who
+                  0x00574e                  _initReturnStack
+                  0x005758                  _pushRetStack
+                  0x005772                  _popRetStack
+                  0x00578a                  _exec
+                  0x005dee                  _execFunc
+                  0x00619e                  _isNumber
+                  0x0061da                  _supDel
+                  0x006216                  _decInst
+                  0x006442                  _interpretString
+                  0x0064fc                  _interpretFunction
+                  0x00650e                  _compileString
+                  0x006562                  _append
+                  0x006588                  _sep
+                  0x00659e                  _compile
+                  0x006614                  _decompile
+                  0x0068ba                  _decompFunc
+                  0x006b6c                  ___delay32
 
 External Symbols in Program Memory (by name):
 
@@ -667,7 +669,7 @@ External Symbols in Program Memory (by name):
                   0x002278                  ___dPutfld_cdnopsuxX
                   0x002278                  ___dPutfld_cdnopuxX
                   0x002278                  ___dPutfld_s
-                  0x006a3a                  ___delay32
+                  0x006b6c                  ___delay32
                   0x0004dc                  ___divdf3
                   0x000fe6                  ___divdi3
                   0x0037ae                  ___divsi3
@@ -729,37 +731,38 @@ External Symbols in Program Memory (by name):
                   0x00023c                  __psv_init
                   0x000200                  __resetPRI
                   0x000b54                  __sincos
-                  0x006430                  _append
+                  0x006562                  _append
                   0x003dc4                  _clearLcd
-                  0x00646c                  _compile
-                  0x0063dc                  _compileString
+                  0x00659e                  _compile
+                  0x00650e                  _compileString
                   0x0004c4                  _cos
                   0x0004c4                  _cosl
                   0x004026                  _decAlphaKeyboard
-                  0x0060e4                  _decInst
+                  0x006216                  _decInst
                   0x0044ce                  _decKeyboard
                   0x00427a                  _decShiftKeyboard
-                  0x006788                  _decompFunc
-                  0x0064e2                  _decompile
+                  0x0068ba                  _decompFunc
+                  0x006614                  _decompile
                   0x0047b8                  _defineFunction
                   0x004722                  _delay
                   0x003f28                  _delayKbd
-                  0x0051aa                  _dictPrint
-                  0x004fde                  _disp
+                  0x0052dc                  _dictPrint
+                  0x005110                  _disp
                   0x004850                  _dispEditLine
                   0x003dde                  _dispLine1
                   0x003df8                  _dispLine2
                   0x004754                  _dispStack
                   0x002e50                  _div
-                  0x005658                  _exec
-                  0x005cbc                  _execFunc
+                  0x00493c                  _editFunction
+                  0x00578a                  _exec
+                  0x005dee                  _execFunc
                   0x00125c                  _exp
                   0x00125c                  _expl
                   0x0035a8                  _fclose
-                  0x0054d4                  _findFunc
-                  0x00551e                  _findFuncN
+                  0x005606                  _findFunc
+                  0x005650                  _findFuncN
                   0x003f34                  _findKey
-                  0x00530c                  _findVar
+                  0x00543e                  _findVar
                   0x0013ea                  _fmod
                   0x0013ea                  _fmodl
                   0x001be8                  _fputc
@@ -768,25 +771,25 @@ External Symbols in Program Memory (by name):
                   0x00143e                  _frexp
                   0x00143e                  _frexpl
                   0x002f6c                  _fwrite
-                  0x004c5a                  _getDouble
-                  0x004e5a                  _getFunc
-                  0x004d6c                  _getInst
-                  0x004cf8                  _getInt
-                  0x004bd6                  _getSize
-                  0x004de8                  _getString
-                  0x004c06                  _getType
-                  0x0052dc                  _getValue
-                  0x005454                  _getVar
-                  0x0051f8                  _getVarLevel
-                  0x00520a                  _getVarName
+                  0x004d8c                  _getDouble
+                  0x004f8c                  _getFunc
+                  0x004e9e                  _getInst
+                  0x004e2a                  _getInt
+                  0x004d08                  _getSize
+                  0x004f1a                  _getString
+                  0x004d38                  _getType
+                  0x00540e                  _getValue
+                  0x005586                  _getVar
+                  0x00532a                  _getVarLevel
+                  0x00533c                  _getVarName
                   0x00486a                  _indicator
-                  0x004bac                  _initDict
+                  0x004cde                  _initDict
                   0x003e96                  _initKbd
-                  0x00561c                  _initReturnStack
-                  0x004e98                  _initStack
-                  0x0063ca                  _interpretFunction
-                  0x006310                  _interpretString
-                  0x00606c                  _isNumber
+                  0x00574e                  _initReturnStack
+                  0x004fca                  _initStack
+                  0x0064fc                  _interpretFunction
+                  0x006442                  _interpretString
+                  0x00619e                  _isNumber
                   0x001bbc                  _isalnum
                   0x001bd8                  _isspace
                   0x0014a8                  _ldexp
@@ -794,73 +797,74 @@ External Symbols in Program Memory (by name):
                   0x003014                  _ldiv
                   0x000690                  _log
                   0x000690                  _logl
-                  0x00497e                  _main
+                  0x004aa2                  _main
                   0x00373a                  _malloc
                   0x00303e                  _memchr
                   0x00169a                  _memcpy
                   0x003e76                  _menu
-                  0x00487c                  _menuFunc
+                  0x0049a0                  _menuFunc
                   0x0047de                  _messageError
+                  0x00487c                  _mot
                   0x003e2a                  _msg
                   0x003e12                  _msgCrt
-                  0x005284                  _nextpDict
-                  0x004ea4                  _nextpStack
-                  0x005570                  _numberOfFunction
-                  0x005640                  _popRetStack
+                  0x0053b6                  _nextpDict
+                  0x004fd6                  _nextpStack
+                  0x0056a2                  _numberOfFunction
+                  0x005772                  _popRetStack
                   0x000914                  _pow
                   0x000914                  _powl
                   0x0047a6                  _printError
                   0x003daa                  _printLcd
-                  0x005626                  _pushRetStack
+                  0x005758                  _pushRetStack
                   0x0016a8                  _putchar
                   0x0016ac                  _puts
                   0x003fe2                  _readKey
                   0x003eba                  _readRow
-                  0x006456                  _sep
-                  0x004c16                  _setDouble
-                  0x0054b0                  _setFunc
-                  0x004d42                  _setInst
-                  0x004cce                  _setInt
-                  0x004bb6                  _setSize
-                  0x004db6                  _setString
-                  0x004bf2                  _setType
-                  0x00542a                  _setVar
-                  0x0051e2                  _setVarLevel
+                  0x006588                  _sep
+                  0x004d48                  _setDouble
+                  0x0055e2                  _setFunc
+                  0x004e74                  _setInst
+                  0x004e00                  _setInt
+                  0x004ce8                  _setSize
+                  0x004ee8                  _setString
+                  0x004d24                  _setType
+                  0x00555c                  _setVar
+                  0x005314                  _setVarLevel
                   0x000b50                  _sin
                   0x000b50                  _sinl
                   0x000cae                  _sqrt
                   0x000cae                  _sqrtl
-                  0x005096                  _stackDisp
-                  0x004eea                  _stackGetTopDouble
-                  0x004f54                  _stackGetTopString
-                  0x004fce                  _stackGetTopType
-                  0x004f90                  _stackPop
-                  0x005176                  _stackPrint
-                  0x004ec8                  _stackPushDouble
-                  0x004f28                  _stackPushInst
-                  0x004f12                  _stackPushInt
-                  0x004f3e                  _stackPushString
-                  0x004c94                  _storeDouble
-                  0x00547c                  _storeFunc
-                  0x004d88                  _storeInst
-                  0x004d14                  _storeInt
-                  0x004e26                  _storeString
-                  0x0052a0                  _storeValue
-                  0x005248                  _storeVar
+                  0x0051c8                  _stackDisp
+                  0x00501c                  _stackGetTopDouble
+                  0x005086                  _stackGetTopString
+                  0x005100                  _stackGetTopType
+                  0x0050c2                  _stackPop
+                  0x0052a8                  _stackPrint
+                  0x004ffa                  _stackPushDouble
+                  0x00505a                  _stackPushInst
+                  0x005044                  _stackPushInt
+                  0x005070                  _stackPushString
+                  0x004dc6                  _storeDouble
+                  0x0055ae                  _storeFunc
+                  0x004eba                  _storeInst
+                  0x004e46                  _storeInt
+                  0x004f58                  _storeString
+                  0x0053d2                  _storeValue
+                  0x00537a                  _storeVar
                   0x0016c2                  _strcat
                   0x003052                  _strchr
                   0x0016d6                  _strcmp
                   0x0016f6                  _strcpy
                   0x001702                  _strlen
                   0x00306a                  _strrchr
-                  0x0060a8                  _supDel
-                  0x0053dc                  _supVar
-                  0x0053f4                  _supVarLevel
-                  0x005360                  _supVarp
+                  0x0061da                  _supDel
+                  0x00550e                  _supVar
+                  0x005526                  _supVarLevel
+                  0x005492                  _supVarp
                   0x000d52                  _tan
                   0x000d52                  _tanl
                   0x004006                  _waitKey
-                  0x00559e                  _who
+                  0x0056d0                  _who
                   0x003e44                  _writeError
                   0x003638                  fclose.XX_elo:_closeall
                   0x002e24                  printf_cdnopsuxX.XXedo:_prout
@@ -1220,34 +1224,34 @@ __CONFIG1
  *(.comment)
  .comment         0x000000         0x5e c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-c-elf.a(xfiles.XX_eo)
 
-.debug_info       0x000000       0x2ba2
+.debug_info       0x000000       0x2ca8
  *(.debug_info)
- .debug_info      0x000000       0x1211 build/real/production/main.o
- .debug_info      0x001211        0x55f build/real/production/interpreteur.o
- .debug_info      0x001770        0xf91 build/real/production/datas.o
- .debug_info      0x002701        0x4a1 build/real/production/calculation.o
+ .debug_info      0x000000       0x1317 build/real/production/main.o
+ .debug_info      0x001317        0x55f build/real/production/interpreteur.o
+ .debug_info      0x001876        0xf91 build/real/production/datas.o
+ .debug_info      0x002807        0x4a1 build/real/production/calculation.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000        0x695
+.debug_abbrev     0x000000        0x6b8
  *(.debug_abbrev)
- .debug_abbrev    0x000000        0x253 build/real/production/main.o
- .debug_abbrev    0x000253        0x105 build/real/production/interpreteur.o
- .debug_abbrev    0x000358        0x218 build/real/production/datas.o
- .debug_abbrev    0x000570        0x125 build/real/production/calculation.o
+ .debug_abbrev    0x000000        0x276 build/real/production/main.o
+ .debug_abbrev    0x000276        0x105 build/real/production/interpreteur.o
+ .debug_abbrev    0x00037b        0x218 build/real/production/datas.o
+ .debug_abbrev    0x000593        0x125 build/real/production/calculation.o
 
-.debug_line       0x000000        0x92c
+.debug_line       0x000000        0x961
  *(.debug_line)
- .debug_line      0x000000        0x458 build/real/production/main.o
- .debug_line      0x000458        0x129 build/real/production/interpreteur.o
- .debug_line      0x000581        0x1d1 build/real/production/datas.o
- .debug_line      0x000752        0x1da build/real/production/calculation.o
+ .debug_line      0x000000        0x48d build/real/production/main.o
+ .debug_line      0x00048d        0x129 build/real/production/interpreteur.o
+ .debug_line      0x0005b6        0x1d1 build/real/production/datas.o
+ .debug_line      0x000787        0x1da build/real/production/calculation.o
 
-.debug_frame      0x000000        0xc02
+.debug_frame      0x000000        0xc3e
  *(.debug_frame)
- .debug_frame     0x000000        0x3ea build/real/production/main.o
- .debug_frame     0x0003ea        0x164 build/real/production/interpreteur.o
- .debug_frame     0x00054e        0x608 build/real/production/datas.o
- .debug_frame     0x000b56         0xac build/real/production/calculation.o
+ .debug_frame     0x000000        0x426 build/real/production/main.o
+ .debug_frame     0x000426        0x164 build/real/production/interpreteur.o
+ .debug_frame     0x00058a        0x608 build/real/production/datas.o
+ .debug_frame     0x000b92         0xac build/real/production/calculation.o
 
 .debug_str        0x000000         0xe4
  *(.debug_str)
@@ -1263,16 +1267,16 @@ __CONFIG1
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000        0x6ee
+                  0x000000        0x707
  *(.debug_pubnames)
  .debug_pubnames
-                  0x000000        0x2c8 build/real/production/main.o
+                  0x000000        0x2e1 build/real/production/main.o
  .debug_pubnames
-                  0x0002c8         0xb6 build/real/production/interpreteur.o
+                  0x0002e1         0xb6 build/real/production/interpreteur.o
  .debug_pubnames
-                  0x00037e        0x2f8 build/real/production/datas.o
+                  0x000397        0x2f8 build/real/production/datas.o
  .debug_pubnames
-                  0x000676         0x78 build/real/production/calculation.o
+                  0x00068f         0x78 build/real/production/calculation.o
 
 .debug_ranges
  *(.debug_ranges)
@@ -2179,8 +2183,8 @@ __c30_signature
  .const             0xbb90         0x6e build/real/production/datas.o
  .const             0xbbfe         0x24 build/real/production/calculation.o
 
-.text             0x003c22       0x2bfc
- .text            0x003c22        0xf8a build/real/production/main.o
+.text             0x003c22       0x2d2e
+ .text            0x003c22       0x10bc build/real/production/main.o
                   0x003c22                  _Lcd_Port
                   0x003c64                  _Lcd_Cmd
                   0x003c90                  _Lcd_Clear
@@ -2214,82 +2218,84 @@ __c30_signature
                   0x0047de                  _messageError
                   0x004850                  _dispEditLine
                   0x00486a                  _indicator
-                  0x00487c                  _menuFunc
-                  0x00497e                  _main
- .text            0x004bac        0xa70 build/real/production/datas.o
-                  0x004bac                  _initDict
-                  0x004bb6                  _setSize
-                  0x004bd6                  _getSize
-                  0x004bf2                  _setType
-                  0x004c06                  _getType
-                  0x004c16                  _setDouble
-                  0x004c5a                  _getDouble
-                  0x004c94                  _storeDouble
-                  0x004cce                  _setInt
-                  0x004cf8                  _getInt
-                  0x004d14                  _storeInt
-                  0x004d42                  _setInst
-                  0x004d6c                  _getInst
-                  0x004d88                  _storeInst
-                  0x004db6                  _setString
-                  0x004de8                  _getString
-                  0x004e26                  _storeString
-                  0x004e5a                  _getFunc
-                  0x004e98                  _initStack
-                  0x004ea4                  _nextpStack
-                  0x004ec8                  _stackPushDouble
-                  0x004eea                  _stackGetTopDouble
-                  0x004f12                  _stackPushInt
-                  0x004f28                  _stackPushInst
-                  0x004f3e                  _stackPushString
-                  0x004f54                  _stackGetTopString
-                  0x004f90                  _stackPop
-                  0x004fce                  _stackGetTopType
-                  0x004fde                  _disp
-                  0x005096                  _stackDisp
-                  0x005176                  _stackPrint
-                  0x0051aa                  _dictPrint
-                  0x0051e2                  _setVarLevel
-                  0x0051f8                  _getVarLevel
-                  0x00520a                  _getVarName
-                  0x005248                  _storeVar
-                  0x005284                  _nextpDict
-                  0x0052a0                  _storeValue
-                  0x0052dc                  _getValue
-                  0x00530c                  _findVar
-                  0x005360                  _supVarp
-                  0x0053dc                  _supVar
-                  0x0053f4                  _supVarLevel
-                  0x00542a                  _setVar
-                  0x005454                  _getVar
-                  0x00547c                  _storeFunc
-                  0x0054b0                  _setFunc
-                  0x0054d4                  _findFunc
-                  0x00551e                  _findFuncN
-                  0x005570                  _numberOfFunction
-                  0x00559e                  _who
- .text            0x00561c        0xa50 build/real/production/calculation.o
-                  0x00561c                  _initReturnStack
-                  0x005626                  _pushRetStack
-                  0x005640                  _popRetStack
-                  0x005658                  _exec
-                  0x005cbc                  _execFunc
- .text            0x00606c        0x7b2 build/real/production/interpreteur.o
-                  0x00606c                  _isNumber
-                  0x0060a8                  _supDel
-                  0x0060e4                  _decInst
-                  0x006310                  _interpretString
-                  0x0063ca                  _interpretFunction
-                  0x0063dc                  _compileString
-                  0x006430                  _append
-                  0x006456                  _sep
-                  0x00646c                  _compile
-                  0x0064e2                  _decompile
-                  0x006788                  _decompFunc
+                  0x00487c                  _mot
+                  0x00493c                  _editFunction
+                  0x0049a0                  _menuFunc
+                  0x004aa2                  _main
+ .text            0x004cde        0xa70 build/real/production/datas.o
+                  0x004cde                  _initDict
+                  0x004ce8                  _setSize
+                  0x004d08                  _getSize
+                  0x004d24                  _setType
+                  0x004d38                  _getType
+                  0x004d48                  _setDouble
+                  0x004d8c                  _getDouble
+                  0x004dc6                  _storeDouble
+                  0x004e00                  _setInt
+                  0x004e2a                  _getInt
+                  0x004e46                  _storeInt
+                  0x004e74                  _setInst
+                  0x004e9e                  _getInst
+                  0x004eba                  _storeInst
+                  0x004ee8                  _setString
+                  0x004f1a                  _getString
+                  0x004f58                  _storeString
+                  0x004f8c                  _getFunc
+                  0x004fca                  _initStack
+                  0x004fd6                  _nextpStack
+                  0x004ffa                  _stackPushDouble
+                  0x00501c                  _stackGetTopDouble
+                  0x005044                  _stackPushInt
+                  0x00505a                  _stackPushInst
+                  0x005070                  _stackPushString
+                  0x005086                  _stackGetTopString
+                  0x0050c2                  _stackPop
+                  0x005100                  _stackGetTopType
+                  0x005110                  _disp
+                  0x0051c8                  _stackDisp
+                  0x0052a8                  _stackPrint
+                  0x0052dc                  _dictPrint
+                  0x005314                  _setVarLevel
+                  0x00532a                  _getVarLevel
+                  0x00533c                  _getVarName
+                  0x00537a                  _storeVar
+                  0x0053b6                  _nextpDict
+                  0x0053d2                  _storeValue
+                  0x00540e                  _getValue
+                  0x00543e                  _findVar
+                  0x005492                  _supVarp
+                  0x00550e                  _supVar
+                  0x005526                  _supVarLevel
+                  0x00555c                  _setVar
+                  0x005586                  _getVar
+                  0x0055ae                  _storeFunc
+                  0x0055e2                  _setFunc
+                  0x005606                  _findFunc
+                  0x005650                  _findFuncN
+                  0x0056a2                  _numberOfFunction
+                  0x0056d0                  _who
+ .text            0x00574e        0xa50 build/real/production/calculation.o
+                  0x00574e                  _initReturnStack
+                  0x005758                  _pushRetStack
+                  0x005772                  _popRetStack
+                  0x00578a                  _exec
+                  0x005dee                  _execFunc
+ .text            0x00619e        0x7b2 build/real/production/interpreteur.o
+                  0x00619e                  _isNumber
+                  0x0061da                  _supDel
+                  0x006216                  _decInst
+                  0x006442                  _interpretString
+                  0x0064fc                  _interpretFunction
+                  0x00650e                  _compileString
+                  0x006562                  _append
+                  0x006588                  _sep
+                  0x00659e                  _compile
+                  0x006614                  _decompile
+                  0x0068ba                  _decompFunc
 
-.dinit            0x00681e        0x21c
- .dinit           0x00681e        0x21c data_init
+.dinit            0x006950        0x21c
+ .dinit           0x006950        0x21c data_init
 
-.init.delay32     0x006a3a         0x1c
- .init.delay32    0x006a3a         0x1c c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
-                  0x006a3a                  ___delay32
+.init.delay32     0x006b6c         0x1c
+ .init.delay32    0x006b6c         0x1c c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
+                  0x006b6c                  ___delay32
