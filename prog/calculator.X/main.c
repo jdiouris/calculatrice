@@ -505,15 +505,15 @@ int mot(int n, char *m )
     char c;
     i=0;
     while ((i<strlen(bufferFunc))&&(!found)) {
-        c=bufferFunc[i];
+        c=bufferFunc[i++];
         switch (state) {
-            case 0: if (c>=' ') { 
-                state=1; im++;
+            case 0: if (c>' ') { 
+                state=1; im++; 
                 if (im==n) { m[j++]=c; }
             }
                 break;
             case 1:
-                if (c<' ') {
+                if (c<=' ') {
                     state=0; 
                     if (im==n) { m[j]=0; found=1; }
                 }
@@ -534,36 +534,38 @@ void editFunction() {
     int f;
     decompFunc("FACT");
     while (!fin) {
-        
+        Lcd_Clear();
         f=mot(1,m);
         if (f)  {  Lcd_Set_Cursor(1, 1); Lcd_Write_String(m); }
         f=mot(2,m);
         if (f)  {  Lcd_Set_Cursor(2, 1); Lcd_Write_String(m); } 
         
-        while ((c = readKey()) != 0);
-        while (readKey == 0);
-        if (c==1) fin=1;
+        while ((c = readKey()) == 0);
+        while (readKey() != 0);
+        if (c==35) fin=1;
     }
 }
-
+int iMF=0;
 void menuFunc() {
     char s[10];
     
     int c = 1;
     int fin=0;
-    int i=0;
+    
     int imax=numberOfFunction();
+    if (iMF>imax-3) iMF=imax;
+    
     while (fin==0)
     {
         Lcd_Clear();
-    if (findFuncN(1+i, s)>-1) menu(1, s);
-    if (findFuncN(2+i, s)>-1) menu(2, s);
-    if (findFuncN(3+i, s)>-1) menu(3, s);
+    if (findFuncN(1+iMF, s)>-1) menu(1, s);
+    if (findFuncN(2+iMF, s)>-1) menu(2, s);
+    if (findFuncN(3+iMF, s)>-1) menu(3, s);
     
     while ((c=readKey())==0);
     if (c==4) 
     {
-        findFuncN(1+i, s);
+        findFuncN(1+iMF, s);
         Lcd_Clear();
         interpretString(s);
         messageError();
@@ -571,7 +573,7 @@ void menuFunc() {
     }
         else if (c==3) 
     {
-        findFuncN(2+i, s);
+        findFuncN(2+iMF, s);
          Lcd_Clear();
         interpretString(s);
             messageError();
@@ -579,7 +581,7 @@ void menuFunc() {
     }
         else if (c==2) 
     {
-        findFuncN(3+i, s);
+        findFuncN(3+iMF, s);
          Lcd_Clear();
         interpretString(s);
             messageError();
@@ -587,13 +589,13 @@ void menuFunc() {
     }
         else if (c==1)
         {
-            if (i<imax-3) i++;
-            else i=0;
+            if (iMF<imax-3) iMF++;
+            else iMF=0;
         }
         else if (c==5)
         {
-            if (i>0) i--;
-            else i=imax-3;
+            if (iMF>0) iMF--;
+            else iMF=imax-3;
         }
         else fin=1;
         while (readKey()!=0);        
@@ -690,6 +692,17 @@ int main(int argc, char** argv) {
                 fnew = 0;
             }
             if (f == faction) {
+                
+                if (cmp(buffer, "OFF")) {
+                      msg("Enter sleep mode...");
+                      delay(1);
+                       LCDON = 0;
+//                       TRISBbits.TRISB6=1.
+//                       CNEN1.CN14IE=1;
+//                       CNPU1.CN14PU1=1;
+                       //IC14CON.ICM0=1;
+                    Sleep();
+                }
                 if (cmp(buffer, "ENTER")) {
                     if (strlen(line) > 0) interpretString(line);
                     else interpretString("DUP");
