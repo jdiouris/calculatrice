@@ -59,10 +59,10 @@ module dessous()
 {
     difference()
     {
-        translate([-ep,-ep,0])  cube([W+2*ep,L+2*ep,0.6]);
-        translate([W/2,0,-1]) cylinder(h=10,d=3);
-        translate([0,L-10,-1]) cylinder(h=10,d=3);
-        translate([W,L-10,-1]) cylinder(h=10,d=3);
+        translate([-ep,-ep,0])  cube([W+2*ep,L+2*ep,1.2]);
+        translate([W/2,0,-1]) cylinder(h=10,d=4);
+        translate([0,L-10,-1]) cylinder(h=10,d=4);
+        translate([W,L-10,-1]) cylinder(h=10,d=4);
     }
     translate([5,0,-3]) cylinder(h=3,d=5);
     translate([W-5,0,-3]) cylinder(h=3,d=5);

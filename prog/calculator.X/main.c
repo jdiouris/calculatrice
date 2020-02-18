@@ -498,6 +498,7 @@ void indicator(char *s) {
 int mot(int n, char *m )
 {
     int found=0;
+    int ip=-1;
     int i;
     int im=0;
     int state=0;
@@ -509,7 +510,7 @@ int mot(int n, char *m )
         switch (state) {
             case 0: if (c>' ') { 
                 state=1; im++; 
-                if (im==n) { m[j++]=c; }
+                if (im==n) { ip=i-1; m[j++]=c; }
             }
                 break;
             case 1:
@@ -523,7 +524,32 @@ int mot(int n, char *m )
                 
         
     }
-    return found;
+    return ip;
+}
+
+void strins(int p, char *m, char *buffer)
+{ 
+  
+    int i;
+    int lm=strlen(m);
+    int lb=strlen(buffer);
+    buffer[lb+lm]=0;
+    for (i=lb-1; i>=p; i--) buffer[i+lm]=buffer[i];
+    for (i=0; i<lm; i++) buffer[i+p]=m[i];
+}
+
+void motInsert(int pm, char *m)
+{
+    int p;
+      char s[20];
+    p=mot(pm,s);
+    strins(0," ",m);
+    strcat(" ",m);
+    if (p==-1) 
+    {
+        p=strlen(bufferFunc)-1;
+    }
+    strins(p,m,bufferFunc);
 }
 
 void editFunction() {
@@ -532,19 +558,42 @@ void editFunction() {
     int fin = 0;
     char m[20];
     int f;
+    i=1;
     decompFunc("FACT");
     while (!fin) {
         Lcd_Clear();
-        f=mot(1,m);
-        if (f)  {  Lcd_Set_Cursor(1, 1); Lcd_Write_String(m); }
-        f=mot(2,m);
-        if (f)  {  Lcd_Set_Cursor(2, 1); Lcd_Write_String(m); } 
+        f=mot(i,m);
+        if (f>=0)  {  Lcd_Set_Cursor(1, 1); Lcd_Write_String(m); }
+        f=mot(i+1,m);
+        if (f>=0)  {  Lcd_Set_Cursor(2, 1); Lcd_Write_String(m); } 
         
         while ((c = readKey()) == 0);
+        
+        if (kbdState == Alpha) f = decAlphaKeyboard(c, buffer);
+            else if (kbdState == Shift) f = decShiftKeyboard(c, buffer);
+            else f = decKeyboard(c, buffer);
+        if (f == faction) {   
+                if (cmp(buffer, "C")) {
+                    fin=1;
+                }
+                if (cmp(buffer, "DOWN")) {
+                    i=i+1;
+                }
+                if (cmp(buffer, "UP")) {
+                    if (i>1) i=i-1;
+                }
+        }
+        else if (f==ffunc)
+        {
+            motInsert(i,buffer);
+        }
         while (readKey() != 0);
-        if (c==35) fin=1;
+        
+      
     }
 }
+
+
 int iMF=0;
 void menuFunc() {
     char s[10];
@@ -603,6 +652,21 @@ void menuFunc() {
     dispStack();
 }
 
+void  goSleep()
+{   
+    msg("Enter sleep mode...");
+    __delay_ms(300);
+    LCDON = 0;
+    // TRISBbits.TRISB6=1.
+    // CNEN1.CN14IE=1;
+    // CNPU1.CN14PU1=1;
+    // IC14CON.ICM0=1;
+    // Ports in input
+    TRISB=0xFFFF;
+    TRISA=0x1F;
+    Sleep();
+}
+
 int main(int argc, char** argv) {
 
     // Init Ports
@@ -631,7 +695,7 @@ int main(int argc, char** argv) {
     dispLine1("Calc RPN v0.101");
     if (wakeup == 1) dispLine2("Wakeup...");
     else dispLine2("Hard reset");
-    delay(1);
+     __delay_ms(300);
 
 
 
@@ -694,14 +758,7 @@ int main(int argc, char** argv) {
             if (f == faction) {
                 
                 if (cmp(buffer, "OFF")) {
-                      msg("Enter sleep mode...");
-                      delay(1);
-                       LCDON = 0;
-//                       TRISBbits.TRISB6=1.
-//                       CNEN1.CN14IE=1;
-//                       CNPU1.CN14PU1=1;
-                       //IC14CON.ICM0=1;
-                    Sleep();
+                    goSleep();
                 }
                 if (cmp(buffer, "ENTER")) {
                     if (strlen(line) > 0) interpretString(line);
