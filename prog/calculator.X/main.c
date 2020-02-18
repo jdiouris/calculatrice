@@ -529,19 +529,18 @@ int mot(int n, char *m )
 
 void strins(int p, char *m, char *buffer)
 { 
-  
     int i;
     int lm=strlen(m);
     int lb=strlen(buffer);
-    buffer[lb+lm]=0;
     for (i=lb-1; i>=p; i--) buffer[i+lm]=buffer[i];
     for (i=0; i<lm; i++) buffer[i+p]=m[i];
+    buffer[lb+lm]=0;
 }
 
 void motInsert(int pm, char *m)
 {
     int p;
-      char s[20];
+    char s[20];
     p=mot(pm,s);
     strins(0," ",m);
     strcat(" ",m);
