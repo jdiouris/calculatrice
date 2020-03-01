@@ -164,7 +164,7 @@ int readKey()
     if (key!=0)
     {
         // anti-rebond
-        delayKbd();
+       delayKbd();
         if (key==findKey()) 
         {
             k=key;
@@ -180,6 +180,20 @@ int waitKey()
     while (k==0) k=readKey();
     while (readKey()!=0);
     return k;
+}
+
+int testKeyC()
+{
+    int r;
+    KBDCOL1=1;
+    KBDCOL2=1;
+    KBDCOL3=1;
+    KBDCOL4=1;
+    KBDCOL5=0;
+   // delayKbd();
+    r=readRow();
+    //KBDCOL5=1;
+    return (r!=0);
 }
 
 #endif	/* KEYBOARD_H */

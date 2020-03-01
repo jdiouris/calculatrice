@@ -69,6 +69,7 @@ int decInst(char *s) {
     else if cmp(s, "SQRT") resu = Func_sqrt;
     else if cmp(s, "POW") resu = Op_pow;
      else if cmp(s, "POW10") resu = Func_pow10;
+      else if cmp(s, "FOR") resu = Func_for;
 
     return resu;
 }
@@ -178,7 +179,7 @@ int compile()
         {
             if (strlen(mot)>0) 
             {
-                compileString(mot);
+                if (!cmp(mot,"RTN")) compileString(mot);
                 printf("mot=%s\n",mot);
             }
             strcpy(mot,"");

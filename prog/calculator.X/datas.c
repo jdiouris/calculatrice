@@ -409,7 +409,7 @@ int findVar(char *s)
     int i = 0;
     int p = -1;
     char svar[20];
-    while ((i < pDict)&&(p==-1)) {
+    while ((i <= pDict)&&(p==-1)) {
         if (getType(i) == tVar) {
             getVarName(svar, i);
             if ((strcmp(s, svar) == 0)&&getVarLevel(i)==funcLevel) p = i;
@@ -432,7 +432,7 @@ void supVarp(int p)
         {
             mem[pp-sz]=mem[pp];
         }
-        pDict-=sz;
+        pDict-=sz; //getSize(pDict-2);
         // supprime le contenu
         sz=getSize(p);
         psave=pDict;
@@ -442,7 +442,7 @@ void supVarp(int p)
         {
             mem[pp-sz]=mem[pp];
         }
-        pDict-=sz;
+        pDict-=getSize(pDict-2);
     
 }
 
@@ -459,7 +459,10 @@ void supVarLevel()
 {
     int i = 0;
     while (i < pDict) {
-        if ((getType(i) == tVar)&& (getVarLevel(i)==funcLevel)) supVarp(i);
+        if (getType(i) == tVar)
+        {
+            if (getVarLevel(i)==funcLevel) supVarp(i);
+        }   
         else i += getSize(i);
     }
 }
@@ -563,6 +566,33 @@ int numberOfFunction()
         i += getSize(i);
     }
     return n;
+}
+
+void supFunc(char *s)
+{
+    int p0=findFunc(s);
+    int end=0;
+    int func;
+    int p=p0;
+    int i;
+    if (p>=0){
+        while (end==0)
+        {
+            if (getType(p)==tInst){
+                func = getInst(p + 3);
+                if (func==Func_rtn) end=1;
+            }
+            p+=getSize(p);
+        }
+        
+        nextpDict();
+        
+        
+        for (i=p; i<pDict; i++)
+            mem[p0+i-p]=mem[i];
+        pDict-=p-p0;
+        pDict-=getSize(pDict-2);
+    }
 }
 void who()
 {

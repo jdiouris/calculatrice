@@ -83,6 +83,18 @@ int funcLevel;
 #define Shift 1
 #define Alpha 2
 
+
+// insert a string m at position p in buffer
+
+void strIns(int p, char *m, char *buffer) {
+    int i;
+    int lm = strlen(m);
+    int lb = strlen(buffer);
+    for (i = lb - 1; i >= p; i--) buffer[i + lm] = buffer[i];
+    for (i = 0; i < lm; i++) buffer[i + p] = m[i];
+    buffer[lb + lm] = 0;
+}
+
 int decAlphaKeyboard(int key, char *t) {
     int f;
     switch (key) {
@@ -212,8 +224,8 @@ int decShiftKeyboard(int key, char *t) {
         case 4: strcpy(t, "");
             f = 0;
             break;
-        case 5: strcpy(t, "");
-            f = 0;
+        case 5: strcpy(t, "SHIFT");
+            f = faction;
             break;
         case 6: strcpy(t, "END");
             f = ffunc;
@@ -423,7 +435,7 @@ int decKeyboard(int key, char *t) {
     }
     return f;
 }
-// Afficheur
+// LCD
 
 void delay(float sec) {
 
@@ -433,6 +445,8 @@ void delay(float sec) {
 }
 #define MAXBUFFERFUNC 1000
 char bufferFunc[MAXBUFFERFUNC];
+
+// Disp Stack content on LCD
 
 void dispStack() {
     clearLcd();
@@ -449,6 +463,8 @@ void printError() {
     printf("Error : %d \n", execError);
 }
 
+// define a new function 
+
 void defineFunction(char *name, char *source) {
     char buffer[20];
     strcpy(bufferFunc, source);
@@ -458,9 +474,11 @@ void defineFunction(char *name, char *source) {
     compile();
 }
 
+// Disp error message if any
+
 void messageError() {
     if (execError != 0) {
-
+        Lcd_Clear();
         switch (execError) {
             case Error: writeError(errorMsg, "Error");
                 break;
@@ -476,12 +494,16 @@ void messageError() {
                 break;
             case ErrorString: writeError(errorMsg, "Incorrect String");
                 break;
+            case ErrorForVar: writeError(errorMsg, "Incorrect For Var");
+                break;
         }
         __delay_ms(1000);
 
         dispStack();
     }
 }
+
+// disp edited line on LCD second line 
 
 void dispEditLine() {
     Lcd_Set_Cursor(2, 1);
@@ -490,169 +512,220 @@ void dispEditLine() {
     Lcd_Write_String(line);
 }
 
+// Set indicator s on LCD
+
 void indicator(char *s) {
     Lcd_Set_Cursor(1, 15);
     Lcd_Write_String(s);
 }
 
-int mot(int n, char *m )
-{
-    int found=0;
-    int ip=-1;
+//Find the  number n word in bufferFunc
+
+int mot(int n, char *m) {
+    int found = 0;
+    int ip = -1;
     int i;
-    int im=0;
-    int state=0;
-    int j=0;
+    int im = 0;
+    int state = 0;
+    int j = 0;
     char c;
-    i=0;
-    while ((i<strlen(bufferFunc))&&(!found)) {
-        c=bufferFunc[i++];
+    i = 0;
+    if (strlen(bufferFunc) > 0)
+        if (bufferFunc[strlen(bufferFunc) - 1] != ' ')
+            strcat(bufferFunc, " ");
+    while ((i < strlen(bufferFunc))&&(!found)) {
+        c = bufferFunc[i++];
         switch (state) {
-            case 0: if (c>' ') { 
-                state=1; im++; 
-                if (im==n) { ip=i-1; m[j++]=c; }
-            }
+            case 0: if (c > ' ') {
+                    state = 1;
+                    im++;
+                    if (im == n) {
+                        ip = i - 1;
+                        m[j++] = c;
+                    }
+                }
                 break;
             case 1:
-                if (c<=' ') {
-                    state=0; 
-                    if (im==n) { m[j]=0; found=1; }
+                if (c <= ' ') {
+                    state = 0;
+                    if (im == n) {
+                        m[j] = 0;
+                        found = 1;
+                    }
+                } else if (im == n) {
+                    m[j++] = c;
                 }
-                else  if (im==n) { m[j++]=c; }
                 break;
         }
-                
-        
+
+
     }
     return ip;
 }
 
-void strins(int p, char *m, char *buffer)
-{ 
-    int i;
-    int lm=strlen(m);
-    int lb=strlen(buffer);
-    for (i=lb-1; i>=p; i--) buffer[i+lm]=buffer[i];
-    for (i=0; i<lm; i++) buffer[i+p]=m[i];
-    buffer[lb+lm]=0;
-}
-
-void motInsert(int pm, char *m)
-{
+void motInsert(int pm, char *m) {
     int p;
     char s[20];
-    p=mot(pm,s);
-    strins(0," ",m);
-    strcat(" ",m);
-    if (p==-1) 
-    {
-        p=strlen(bufferFunc)-1;
+    p = mot(pm, s);
+    strcpy(s, m);
+    strcat(s, " ");
+
+    if (p == -1) {
+        p = strlen(bufferFunc) - 1;
+        strIns(0, " ", s);
     }
-    strins(p,m,bufferFunc);
+    strIns(p, s, bufferFunc);
 }
 
-void editFunction() {
+void motSup(int pm)
+{
+    int p;
+    int i;
+    int len;
+    char s[20];
+    p=mot(pm,s);
+    len=strlen(s);
+    for (i=p; i<strlen(bufferFunc)-len; i++)
+    {
+        bufferFunc[i]=bufferFunc[i+len];
+    }
+    bufferFunc[strlen(bufferFunc)-len]=0;
+}
+
+void editFunction()
+{
     int i;
     char c;
+    int k;
     int fin = 0;
     char m[20];
+    char func[10];
+    char inst[20];
+
     int f;
-    i=1;
-    decompFunc("FACT");
-    while (!fin) {
-        Lcd_Clear();
-        f=mot(i,m);
-        if (f>=0)  {  Lcd_Set_Cursor(1, 1); Lcd_Write_String(m); }
-        f=mot(i+1,m);
-        if (f>=0)  {  Lcd_Set_Cursor(2, 1); Lcd_Write_String(m); } 
-        
-        while ((c = readKey()) == 0);
-        
-        if (kbdState == Alpha) f = decAlphaKeyboard(c, buffer);
+    i = 1;
+    kbdState=Normal;
+    if (menuFunc(func)) {
+        decompFunc(func);
+        strcpy(line,"");
+        while (!fin) {
+            Lcd_Clear();
+            f = mot(i, m);
+
+            if (f >= 0) {
+                sprintf(inst, "%d  %s", i, m);
+                Lcd_Set_Cursor(1, 1);
+                Lcd_Write_String(inst);
+            }
+            
+            if (strlen(line)>0) dispEditLine();
+            else {
+            f = mot(i + 1, m);
+
+            if (f >= 0) {
+                sprintf(inst, "%d> %s", i + 1, m);
+                Lcd_Set_Cursor(2, 1);
+                Lcd_Write_String(inst);
+            }
+            }
+            
+            if (kbdState==Shift) indicator("S");
+            else if (kbdState==Alpha) indicator("A");
+            else indicator(" ");
+            
+            while ((c = readKey()) == 0);
+
+            if (kbdState == Alpha) f = decAlphaKeyboard(c, buffer);
             else if (kbdState == Shift) f = decShiftKeyboard(c, buffer);
             else f = decKeyboard(c, buffer);
-        if (f == faction) {   
+            if (f==fchar)
+            {
+                 strcat(line, buffer);
+            }
+            if (f == faction) {
                 if (cmp(buffer, "C")) {
-                    fin=1;
+                    fin = 1;
                 }
-                if (cmp(buffer, "DOWN")) {
-                    i=i+1;
+                else if (cmp(buffer, "<-")) {
+                   k = strlen(line);
+                    if (k > 0) {
+                        line[k - 1] = 0;
+                    } else motSup(i+1);
+                    
                 }
-                if (cmp(buffer, "UP")) {
-                    if (i>1) i=i-1;
+                    else if (cmp(buffer, "DOWN")) {
+                    if  (strlen(line)>0) { motInsert(i + 1, line); strcpy(line,""); }
+                    i = i + 1;
+                } 
+                    else if (cmp(buffer, "UP")) {
+                     if  (strlen(line)>0) { motInsert(i + 1, line); strcpy(line,""); }
+                    if (i > 1) i = i - 1;
+                } else if (cmp(buffer, "ALPHA")) {
+                    if (kbdState != Alpha) kbdState = Alpha;
+                    else  kbdState = Normal;                    
+                } else if (cmp(buffer, "SHIFT")) {
+                    if (kbdState != Shift) kbdState = Shift;
+                    else kbdState = Normal;
                 }
+            } else if (f == ffunc) {
+                if  (strlen(line)>0) { motInsert(i + 1, line); strcpy(line,""); }
+                motInsert(i + 1, buffer);
+            }
+            while (readKey() != 0);
+             if (kbdState == Shift)
+                if (!cmp(buffer, "SHIFT")) {
+                    kbdState = Normal;
+                    indicator(" ");
+                }
+
         }
-        else if (f==ffunc)
-        {
-            motInsert(i,buffer);
-        }
-        while (readKey() != 0);
-        
-      
+        supFunc(func);
+        defineFunction(func, bufferFunc);
     }
 }
 
 
-int iMF=0;
-void menuFunc() {
+int iMF = 0;
+
+int menuFunc(char * func) {
     char s[10];
-    
+
     int c = 1;
-    int fin=0;
-    
-    int imax=numberOfFunction();
-    if (iMF>imax-3) iMF=imax;
-    
-    while (fin==0)
-    {
+    int fin = 0;
+    strcpy(line, "");
+    int imax = numberOfFunction();
+    if (iMF > imax - 3) iMF = imax - 1;
+
+    while (fin == 0) {
         Lcd_Clear();
-    if (findFuncN(1+iMF, s)>-1) menu(1, s);
-    if (findFuncN(2+iMF, s)>-1) menu(2, s);
-    if (findFuncN(3+iMF, s)>-1) menu(3, s);
-    
-    while ((c=readKey())==0);
-    if (c==4) 
-    {
-        findFuncN(1+iMF, s);
-        Lcd_Clear();
-        interpretString(s);
-        messageError();
-        fin=1;
+        if (findFuncN(1 + iMF, s)>-1) menu(1, s);
+        if (findFuncN(2 + iMF, s)>-1) menu(2, s);
+        if (findFuncN(3 + iMF, s)>-1) menu(3, s);
+
+        while ((c = readKey()) == 0);
+        if (c == 4) {
+            findFuncN(1 + iMF, func);
+            fin = 2;
+        } else if (c == 3) {
+            findFuncN(2 + iMF, func);
+            fin = 2;
+        } else if (c == 2) {
+            findFuncN(3 + iMF, func);
+            fin = 2;
+        } else if (c == 1) {
+            if (iMF < imax - 3) iMF += 3;
+            else iMF = 0;
+        } else if (c == 5) {
+            if (iMF > 3) iMF -= 3;
+            else iMF = imax - 3;
+        } else fin = 1;
+        while (readKey() != 0);
     }
-        else if (c==3) 
-    {
-        findFuncN(2+iMF, s);
-         Lcd_Clear();
-        interpretString(s);
-            messageError();
-            fin=1;
-    }
-        else if (c==2) 
-    {
-        findFuncN(3+iMF, s);
-         Lcd_Clear();
-        interpretString(s);
-            messageError();
-            fin=1;
-    }
-        else if (c==1)
-        {
-            if (iMF<imax-3) iMF++;
-            else iMF=0;
-        }
-        else if (c==5)
-        {
-            if (iMF>0) iMF--;
-            else iMF=imax-3;
-        }
-        else fin=1;
-        while (readKey()!=0);        
-    }
-    dispStack();
+
+    return fin;
 }
 
-void  goSleep()
-{   
+void goSleep() {
     msg("Enter sleep mode...");
     __delay_ms(300);
     LCDON = 0;
@@ -661,8 +734,8 @@ void  goSleep()
     // CNPU1.CN14PU1=1;
     // IC14CON.ICM0=1;
     // Ports in input
-    TRISB=0xFFFF;
-    TRISA=0x1F;
+    TRISB = 0xFFFF;
+    TRISA = 0x1F;
     Sleep();
 }
 
@@ -694,7 +767,7 @@ int main(int argc, char** argv) {
     dispLine1("Calc RPN v0.101");
     if (wakeup == 1) dispLine2("Wakeup...");
     else dispLine2("Hard reset");
-     __delay_ms(300);
+    __delay_ms(300);
 
 
 
@@ -705,28 +778,31 @@ int main(int argc, char** argv) {
     strcpy(line, "");
     // Flag first char or console
     int fnew = 1;
-    // State of keyboad
+    // State of keyboard
     kbdState = Normal;
 
     // Useful functions
-
-    defineFunction("FACT", " 'N' STO 1 'I' STO  1 'A' STO WHILE I N <= DO  A I * 'A' STO I 1 + 'I' STO   END A ");
+    defineFunction("FORT", "0 1 5 'I' FOR I + END");
+    //defineFunction("FACT", " 'N' STO 1 'I' STO  1 'A' STO WHILE I N <= DO  A I * 'A' STO I 1 + 'I' STO   END A ");
+    defineFunction("FACT", " 'N' STO 1 1 N 'I' FOR  I * END ");
     defineFunction("INC", "1 + ");
     defineFunction("SGN", " 0 < IF -1 ELSE 1 END ");
-    defineFunction("SU", " 0 'S' STO 1 'I' STO WHILE I 100 <= DO I INV S + 'S' STO I 1 + 'I' STO END S ");
+    defineFunction("SU", "'N' STO 0 1 N 'I' FOR I INV + END  ");
     defineFunction("LOG2", "LOG 2 LOG /");
 
-    // interpretString("SU");
+    //supFunc("FACT");
+
+    // defineFunction("FACT", " 'N' STO 1 1 N 'I' FOR  I * END ");
+
+    //interpretString("10");
+    //interpretString("FACT");
+    //    interpretString("10");
+    //     interpretString("FACT");
     //decompFunc("SU");
-    //printf("%s\n",bufferFunc);
-    //interpretString("SUITE"); 
-    interpretString("3");
-    interpretString("'A'");
-    interpretString("STO");
-    interpretString("2");
-    interpretString("'B'");
-    interpretString("STO");
-    // interpretString("WHO");
+    //strIns(4,"ESSAI ",bufferFunc);
+    //    motInsert(2, "ESSAI");
+    messageError();
+
     dispStack();
 
     //  interpretString("A");
@@ -753,21 +829,18 @@ int main(int argc, char** argv) {
                 }
                 dispEditLine();
                 fnew = 0;
-            }
-            if (f == faction) {
-                
+            } else if (f == faction) {
+
                 if (cmp(buffer, "OFF")) {
                     goSleep();
-                }
-                if (cmp(buffer, "ENTER")) {
+                } else if (cmp(buffer, "ENTER")) {
                     if (strlen(line) > 0) interpretString(line);
                     else interpretString("DUP");
                     messageError();
                     strcpy(line, "");
                     fnew = 1;
                     dispStack();
-                }
-                if (cmp(buffer, "<-")) {
+                } else if (cmp(buffer, "<-")) {
                     int k = strlen(line);
                     if (k > 0) {
                         line[k - 1] = 0;
@@ -777,8 +850,7 @@ int main(int argc, char** argv) {
                         if (execError == 0) stackPushDouble(0.0);
                         dispStack();
                     }
-                }
-                if (cmp(buffer, "ALPHA")) {
+                } else if (cmp(buffer, "ALPHA")) {
                     if (kbdState != Alpha) {
                         kbdState = Alpha;
                         indicator("A");
@@ -786,8 +858,7 @@ int main(int argc, char** argv) {
                         kbdState = Normal;
                         indicator(" ");
                     }
-                }
-                if (cmp(buffer, "SHIFT")) {
+                } else if (cmp(buffer, "SHIFT")) {
                     if (kbdState != Shift) {
                         kbdState = Shift;
                         indicator("S");
@@ -795,22 +866,24 @@ int main(int argc, char** argv) {
                         kbdState = Normal;
                         indicator(" ");
                     }
-                }
-                if (cmp(buffer, "USER")) {
+                } else if (cmp(buffer, "USER")) {
                     if (strlen(line) > 0) {
+                        interpretString(line);
+                        messageError();
+                    }
+                    if (menuFunc(line) == 2) {
+                        Lcd_Clear();
                         interpretString(line);
                         messageError();
                         strcpy(line, "");
                         fnew = 1;
+                        dispStack();
                     }
-                    menuFunc();
-                }
-                if (cmp(buffer,"EDIT")) {
+                } else if (cmp(buffer, "EDIT")) {
                     editFunction();
-                     dispStack();
+                    dispStack();
                 }
-            }
-            if (f == ffunc) {
+            } else if (f == ffunc) {
                 if (strlen(line) > 0) {
                     interpretString(line);
                     messageError();

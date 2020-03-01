@@ -10,7 +10,7 @@ struct pelt {
     int func;
     int factif;
     int p;
-    //  char s[20];
+    char var[1];
     double i1;
     double i2;
 };
@@ -288,6 +288,28 @@ int execFunc(char *name) {
                                     fexec = 0;
                                 }
                                 break;
+                            case Func_for:
+                                stackGetTopString(buffer);
+                                stackPop();
+                                pushRetStack();
+                                if (strlen(buffer)>1) execError=ErrorForVar;
+                                if (execError != 0) end = 1;
+                                else {
+                                    retStack[pRetStack].func = Func_for;
+                                    retStack[pRetStack].factif = 1;
+                                    retStack[pRetStack].p = p;
+                                    retStack[pRetStack].i2=stackGetTopDouble();
+                                    stackPop();
+                                    retStack[pRetStack].i1=stackGetTopDouble();
+                                    stackPop();
+                                    strcpy(retStack[pRetStack].var,buffer);
+                                    stackPushDouble(retStack[pRetStack].i1);
+                                    stackPushString(buffer);
+                                    exec(Func_sto);
+                                }
+                                
+                                break;
+                                
                             case Func_while:
                                 pushRetStack();
                                 if (execError != 0) end = 1;
@@ -313,6 +335,23 @@ int execFunc(char *name) {
                                 if (retStack[pRetStack].func == Func_while) {
                                     p = retStack[pRetStack].p;
                                 }
+                                 if (retStack[pRetStack].func == Func_for) {
+                                    
+                                     getVar(retStack[pRetStack].var);
+                                     stackPushDouble(1.0);
+                                     exec(Op_add);
+                                     double x=stackGetTopDouble();
+                                     stackPushString(retStack[pRetStack].var);
+                                     exec(Func_sto);
+                                     if (x<=retStack[pRetStack].i2)
+                                     {
+                                        p = retStack[pRetStack].p;
+                                        
+                                     }
+                                     else 
+                                         popRetStack();
+                                    if (execError != 0) end = 1;
+                                }
                                 break;
                             case Func_else:
                                 fexec = 0;
@@ -330,6 +369,10 @@ int execFunc(char *name) {
                 switch (func) {
                     case Func_rtn: end = 1;
                         break;
+                    case Func_for: end = 1;
+                        pushRetStack();
+                        retStack[pRetStack].func = Func_for;
+                        break;
                     case Func_end:
                         if (retStack[pRetStack].func == Func_if) {
                             if (retStack[pRetStack].factif == 1) fexec = 1;
@@ -339,6 +382,11 @@ int execFunc(char *name) {
                             popRetStack();
                             if (execError != 0) end = 1;
                             fexec = 1;
+                        }
+                        if (retStack[pRetStack].func == Func_for) {
+                            popRetStack();
+                            if (execError != 0) end = 1;
+                           // fexec = 1;
                         }
                         break;
                     case Func_if:
@@ -379,9 +427,10 @@ int execFunc(char *name) {
             }
 
             if (execError != 0) end = 1;
+           if (testKeyC()) end=1;
         }
     } else execError = ErrorFuncNotFound;
-    supVarLevel();
+   supVarLevel();
     funcLevel--;
 
     return execError;

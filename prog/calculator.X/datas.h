@@ -23,7 +23,7 @@ typedef unsigned char byte;
 
 
 // define sizes of Dictionary, data stack and return stack
-#define DICTSIZE 1000
+#define DICTSIZE 2000
 
 #define STACKSIZE 1000
 #define STACK0 DICTSIZE
@@ -107,6 +107,7 @@ typedef unsigned char byte;
 #define ErrorString 7
 #define ErrorReturnStackFull 8
 #define ErrorReturnStackEmpty 9
+#define ErrorForVar 10
 
 
 // Pointers
@@ -167,6 +168,8 @@ void setFunc();
 int findFunc(char *s);
 
 int findFuncN(int N, char *s);
+
+void supFunc(char *s);
 
 int numberOfFunction();
 
